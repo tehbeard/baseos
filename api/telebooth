@@ -1,0 +1,55 @@
+port = peripheral.wrap("bottom")
+ 
+ 
+local stationId = 1
+ 
+function getsid()
+return stationId
+end
+ 
+-- set this stations id
+function ssid(id)
+stationId = id
+end
+ 
+-- Attempts to aqquire the Spatial IO token
+function aqquireToken(tid)
+ return (port.pullItemIntoSlot("down",tid,1,1) == 1)
+end
+ 
+-- push token to another location
+function pushTo(to)
+  return (port.pushItemIntoSlot("down",2,1,to) == 1)
+end
+ 
+function energize()
+  print("Energizing");
+  redstone.setOutput("bottom",true)
+  sleep(1)
+  redstone.setOutput("bottom",false)
+end
+ 
+function teleport(to)
+ 
+  print("Aqquiring translocation token.")
+  while(aqquireToken(27) == false) do
+    sleep(2)
+  end
+  print("translocation token gotten.")
+  energize()
+  pushTo(to)
+end
+ 
+function recTeleport(from)
+        if (aqquireToken(from)) then
+                        energize()
+                        pushTo(27)
+                end
+end
+ 
+function recThread()
+while(true) do
+  recTeleport(getsid())
+  sleep(5)
+end
+end

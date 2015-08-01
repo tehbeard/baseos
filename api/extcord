@@ -1,0 +1,13 @@
+function new(per)
+  return setmetatable({},{
+    __index = function(t,key)
+      return function(...)
+        a = 0
+        for _,f in pairs(per) do
+          a = a + f[key](...)
+        end
+        return a
+      end
+    end
+  })
+end

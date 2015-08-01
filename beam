@@ -1,0 +1,42 @@
+os.loadAPI("api/telebooth")
+os.loadAPI("api/txtMenu")
+args = {...}
+ 
+telebooth.ssid(tonumber(args[1]))
+ 
+h = fs.open("config.cfg","r")
+ 
+data = textutils.unserialize(h.readAll())
+h.close()
+ 
+function itData(cb)
+  for _,v in ipairs(data) do
+   if cb(v) then return end
+  end
+end
+ 
+itData(
+  function(d)
+    if( d.id == telebooth.getsid()) then
+      txtMenu.setTitle(d.name)
+      return true
+    end
+    return false
+  end)
+
+itData(
+function(d)
+  if d.id ~= telebooth.getsid() then
+    txtMenu.addMenuItem(d.name,"Go",function() os.queueEvent("telebooth_tp_req",d.id) end)
+  end
+end)
+
+function doTp()
+  while true do
+      _,id = os.pullEvent("telebooth_tp_req")
+      telebooth.teleport(id)
+  end
+end
+
+ 
+parallel.waitForAll(txtMenu.mainloop,doTp,telebooth.recThread)

@@ -1,0 +1,45 @@
+db = {}
+
+fh = fs.open("itemqry.lst","r")
+l = fh.readLine()
+while l ~=nil do
+  db[key] = {}
+  l = fh.readLine()
+end
+
+fh.close()
+
+function getCnt(item)
+	i = 0
+	for _,v in pairs(db[item]) do
+		i = i + v
+	end
+end
+
+
+os.loadAPI("api/locate")
+os.loadAPI("api/txtMenu")
+locate.openRednet()
+
+txtMenu.setTitle("Item query")
+
+db["Cobblestone"] = 0
+txtMenu.addMenuItem("cobblestone",function() return tostring(getCnt["Cobblestone"]) end,function() end)
+
+function upd_loop()
+while true do
+  id,msg = rednet.receive(1)
+  if msg ~= nil then
+    packet = textutils.unserialize(msg)
+      if packet["proto"] == "itemqry" then
+          item = packet["item"]
+          count = packet["count"]
+          if db[item] ~= nil then
+            db[item][id]=count
+          end
+      end
+  end
+end
+end
+
+parallel.waitForAny(function() txtMenu.mainLoop(true),upd_loop)

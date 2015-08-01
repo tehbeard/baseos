@@ -1,0 +1,24 @@
+function load(filename,def)
+  if fs.exists(filename) then
+    fh = fs.open(filename,"r")
+    tbl = textutils.unserialize(fh.readAll())
+    fh.close()
+    return tbl
+  end
+
+  tbl = {}
+  print("First time run, please fill out the config.")
+  for key,query in pairs(def) do
+  	term.clear()
+  	term.setCursorPos(1,1)
+  	print(query)
+  	term.write(key .. "=")
+  	r = read()
+  	if #r == 0 then r = nil end
+  	tbl[key] = r
+  end
+  fh = fs.open(filename,"w")
+  fh.write(textutils.serialize(tbl))
+  fh.close()
+  return tbl
+end

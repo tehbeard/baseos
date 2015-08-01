@@ -1,0 +1,232 @@
+------------------------------
+-- Remote Redstone
+-- Remotely link redstone across your base
+-- Using CC computers + 
+------------------------------
+local function inTable(tbl, item)
+    for key, value in pairs(tbl) do
+        if value == item then return true end
+    end
+    return false
+end
+
+local variables = {}
+
+-- virtual function
+local function nil_func(name,entry)
+	return entry.state
+end
+-- read from a side
+local function read_side(name,entry)
+	return redstone.getInput(name)
+end
+-- Write to a side
+local function write_side(name,entry)
+	redstone.setOutput(name,entry.state)
+end
+
+-- Read in bundled cable
+local function read_bundle(name,entry)
+	return redstone.testBundledInput(entry.side,entry.col)
+end
+-- Write out to bundled cable
+local function write_bundle(name,entry)
+	local newC =  redstone.getBundledOutput(entry.side)
+	if entry.state then
+		newC = bit.bor(newC , entry.col)
+	else
+		newC = bit.band(newC, bit.bnot(entry.col))
+	end
+	redstone.setBundledOutput(entry.side, newC)
+end
+
+
+-- Exposes a side of a Comp to the variables system, with settings for read/write
+function expose(side,r,w)
+	if inTable(rs.getSides(),side) then
+		variables[side] = {
+	      callback=nil,
+	      state=false,
+	      remote=false,
+	      read=r,
+	      write=w,
+	      remotewrite=false,
+	      virtual=false,
+	      reader=read_side,
+	      writer=write_side
+	    }
+    end
+end
+-- Expose bundled cable on a side.
+function expose_bundle(name,side,color,r,w)
+	if inTable(rs.getSides(),side) then
+		variables[name] = {
+		  side=side,
+	      callback=nil,
+	      state=false,
+	      remote=false,
+	      read=r,
+	      write=w,
+	      remotewrite=false,
+	      virtual=false,
+	      reader=read_bundle,
+	      writer=write_bundle,
+	      col=color
+	    }
+    end
+end
+
+-- Exposes a virtual variable
+function virtual(name)
+	variables[side] = {
+	      callback=nil,
+	      state=false,
+	      remote=false,
+	      read=true,
+	      write=true,
+	      remotewrite=false,
+	      virtual=true,
+	      reader=nil_func,
+	      writer=nil_func
+	    }
+end
+
+-- Expose a variable to be remotely accessible, and whether to allow network writes.
+function exposeRemote(name,writable)
+	if variables[name] ~= nil then
+		variables[name]["remote"]=true
+		variables[name]["writable"]=writable
+	end
+end
+
+-- set the value of a local variable to be the result of this callback
+function set(name,callback)
+	if variables[name] ~= nil then
+		variables[name]["callback"]=callback
+	end
+end
+-- directly set state of a variable
+function setState(name,state)
+	variables[name].state = state;
+end
+
+
+-- Callback ops to handle or,and and xor
+ops = {}
+ops["and"] = function(a1,a2) return function() return a1() and a2() end end
+ops["or"] = function(a1,a2) return function() return a1() or a2() end end
+ops["xor"] = function(a1,a2) return function() return bit.bxor(a1(),a2()) end end
+
+
+-- get callback for local variable
+function getLocal(name)	return function() return variables[name]["state"] end end
+
+-- get remote value callback
+function getRemote(host,name)
+	return function()
+	for ii=1,20,1 do -- Try sending the message 20 times
+	rednet.broadcast(textutils.serialize(packetGet(host,name)))
+	  -- Rebroadcast message for every 100 messages we check, somewhat crummy self repair mechanism
+	  for i=1,50,1 do
+	  	_,message = rednet.receive(0.01)
+	  	if message ~= nil then
+	      packet = textutils.unserialize(message)
+	      if packet["proto"] == "remoteredstone" and packet["type"] == "getresponse" and packet["host"] == host and packet["var"]==name then
+	        return packet["value"]
+	      end
+	    end
+	  end
+	end
+	  return false
+	end
+end
+
+-- Simple iteration and escape function
+local function iter(tbl,cb) for k,v in pairs(tbl) do if cb(k,v) then return end end end
+
+-- Local loop function, updates redstone inputs, processes callbacks, then sets outputs as nessecary
+local function localUpdate()
+	while true do
+	-- Read redstone locally
+	iter(variables,function(side,entry) 
+			if entry.read then 
+				entry.state = entry.reader(side,entry)
+			end
+			return false 
+			end)
+
+	-- Process callbacks
+	iter(variables,function(side,entry) 
+		    if entry.callback ~= nil then 
+			  entry.state = entry.callback()
+			end
+			return false 
+			end)
+	-- set output locally
+	iter(variables,function(side,entry) 
+			if  entry.write then 
+				entry.writer(side, entry)
+			end
+			return false 
+			end)
+	sleep(0.01)
+	end
+end
+
+-- construct base packet.
+local function packetBase(_type)
+	return {proto="remoteredstone",type=_type}
+end
+
+-- Constructs a packet to get 
+local function packetGet(host,var)
+	p = packetBase("get")
+	p["dest"]=host
+	p["var"]=var
+	return p
+end
+
+-- Reply packet for get
+local function packetGetResponse(host,var,value)
+	p = packetBase("getresponse")
+	p["host"]=host
+	p["var"]=var
+	p["value"]=value
+	return p
+end
+
+-- Packet handlers
+packetHandler = {}
+packetHandler["get"] = function(reply, packet) 
+  var = packet["var"]
+  if variables[var] ~= nil then
+  	-- Construct reply packet
+  	if variables[var]["remote"] then
+  		rednet.send(reply,textutils.serialize(packetGetResponse(packet["dest"],packet["var"],variables[var]["state"])))
+  	end
+  end
+end
+packetHandler["set"] = function(reply,packet) 
+var = packet["var"]
+  if variables[var] ~= nil then
+  	if variables[var]["remote"] and variables[var]["remotewrite"] then
+  		variables[var]["state"] = packet["value"]
+  	end
+  end
+end
+
+-- Local rednet reply loop
+local function rednetServer()
+	while true do
+		reply, msg = rednet.receive()
+		packet = textutils.unserialize(msg)
+		if packet["proto"] == "remoteredstone" and packet["dest"] == os.getComputerLabel() and (packet["type"] == "get" or packet["type"] == "set") then
+			packetHandler[packet["type"]](reply,packet)
+		end
+	end
+end
+
+-- Start the rednet and local update reply loops
+function init()
+	parallel.waitForAll(localUpdate,rednetServer)
+end

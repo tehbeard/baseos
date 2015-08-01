@@ -1,0 +1,55 @@
+-- locate a peripheral by type
+function byType(type)
+  for _,name in ipairs(peripheral.getNames()) do
+  	if peripheral.getType(name) == type then
+  		return peripheral.wrap(name)
+  	end
+  end
+  return nil
+end
+-- Locate peripheral by method
+function byMethod(methodName)
+  for _,name in ipairs(peripheral.getNames()) do
+  	for _, v in ipairs(peripheral.getMethods(name)) do
+  		if v == methodName then
+  			return peripheral.wrap(name)
+  		end
+  	end
+  end
+  return nil
+end
+
+-- locate all peripheral of type
+function byTypeMulti(type)
+  t = {}
+  for _,name in ipairs(peripheral.getNames()) do
+  	if peripheral.getType(name) == type then
+  		t[name]=peripheral.wrap(name)
+  	end
+  end
+  return t;
+end
+-- Locate peripherals with method
+function byMethodMulti(methodName)
+  t = {}
+  for _,name in ipairs(peripheral.getNames()) do
+  	for _, v in ipairs(peripheral.getMethods(name)) do
+  		if v == methodName then
+  			t[name]=peripheral.wrap(name)
+  		end
+  	end
+  end
+  return t
+end
+
+function openRednet()
+  for _,v in pairs(redstone.getSides()) do
+    pcall(rednet.open,v)
+  end
+end
+
+function closeRednet()
+  for _,v in pairs(redstone.getSides()) do
+    pcall(rednet.open,v)
+  end
+end

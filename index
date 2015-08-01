@@ -1,0 +1,129 @@
+{
+	-- TextMenu API
+	-- This is always installed by installer, 
+	-- it provides a reusable vertical menu API w/ paging and updatable status
+	txtmenu={
+	api=true,
+	name="[API] Text Menu",
+	files={"api/txtMenu"}
+	},
+
+	-- Reactor
+	-- Big Reactor control program
+	reactor={
+	name="Big Reactor control",
+	files={"Reactor"}
+	},
+
+	-- Extension cord
+	-- Small API that allows you to easily control multiples of the same peripheral at once
+	-- an exercise in metatable stupidity
+	extcord={
+	api=true,
+	name="[API] Extension cord",
+	files={"api/extcord"}
+	},
+
+
+	-- wget
+	-- provides a simple wget command
+	wget={
+	name="wget",
+	files={"wget"}
+	},
+
+	-- EZConfig
+	-- Small api to load configs from file, and do installer questions 
+	-- if no config is found
+	ezcfg={
+	api=true,
+	name="[API] EZcfg",
+	files={"api/ezcfg"}
+	},
+
+
+	-- Beard's Better Stargate program
+	-- Much better program to control a "Stargate" (Myst portal)
+	-- Unlike dw20, it doesn't need a turtle, modems and what not.
+	-- Unfortunately, you do need to anvil a book to name it.
+	-- But, it does provide iris control
+	stargate={
+	name="Stargate 2",
+	files={"stargate"},
+	deps={"txtmenu","ezcfg"}
+	},
+
+
+	-- Energy Control program 
+	-- based on droxs work
+	energycontrol={
+	name="EnergyControl",
+	files={"checkenergy","engine.cfg"},
+	deps={"locate","extcord"}
+	},
+
+
+	-- Locate peripheral API
+	-- minor methods to get peripherals by type, method,
+	-- and all peripherals by type / method
+	-- also open/close all rednet modems
+	locate={
+	api=true,
+	name="[API] Locate peripherals",
+	files={"api/locate"}
+	},
+
+
+	-- Remote redstoneAPI
+	-- This allows you to control redstone across a computer network
+	-- When combined with text menu it provides a powerful base control system
+	remoters={
+	api=true,
+	name="[API] Remote Redstone",
+	files={"api/rr"}
+	},
+
+	-- Base network api for tracking item quantities over a network.
+	-- Can be used to provide fluid or item quantities over a network
+	qtynet={
+	api=true,
+	name="[API] QuantityNet",
+	files={"api/qtynet"}
+	},	
+
+
+
+	beam={
+	name="Beam (Telebooth)",
+	files={"beam","api/telebooth"},
+	deps={"txtMenu"}
+	},
+
+
+	ft={
+	api=true,
+	name="[API] Force Turtle",
+	files={"api/ft"}
+	},
+
+
+	buildr={
+	name="Buildr",
+	files={"buildr"},
+	deps={"ft"}
+	},
+
+
+
+	--Sneak program, will jack stuff from a chest
+	sneak={
+	name="Sneak",
+	files={"utils/sneak"}
+	},
+
+	--probes peripherals
+	probe={
+	name="Probe",
+	files={"utils/probe"}
+	}
+}

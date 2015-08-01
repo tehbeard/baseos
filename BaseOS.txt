@@ -1,0 +1,109 @@
+BaseOS
+======
+
+Distributed system to manage a base (storage, energy, fluids, redstone, display)
+
+========
+Redstone
+========
+
+Distributed redstone control system
+
+Example program
+---------------
+expose("front") -- Add the front as a input to scan. 
+exposeRemote("front", false) -- Exposes the variable front to remote queries
+set("right",and(local("front"),remote("mainframe","override")))-- Set the output right to result of ANDing the local front value and the remote value mainframe's override variable.
+setRemote("mainframe","doorStatus",local("front"))
+init() - Start remote redstone
+API
+---
+expose(varname) - Expsoes a side to the system for reading / input
+virtual(varname) - Creates a virtual side (variable)
+exposeRemote(varname,writable) - exposes a variable to remote reading, if writable is true it can be remotely written
+
+set(varname,callback) - sets the callback to run when updating that variable
+setRemote(remoteaddr,varname,callback) - sets the callback to run when updating that variable
+
+and(a1,a2) - returns a callback for return a1() && a2()
+
+local(varname) - callback to get local redstone value
+remote(remoteaddr, varname) - callback to get remote redstone value
+
+=======
+Storage
+=======
+
+Allows scanning of available resources in chests and AE networks across the base.
+host program scans all sides for inventories, AE chests and controllers connected to provide information.
+
+query(itemname,exact,timeout) - Sends out a request for information on location of items, exact specifies not using pattern matching, timeout indicates length of time to wait for responses
+return format:
+{
+	1={loc="AE",is={...}},
+	2={loc="workshop",is{...}},
+	.....
+}
+
+queryTotal(itemname,exact,dmg,timeout) - Return total amount of item found in entire network, dmg is either nil (ignore) or numeric for damage based items.
+
+^^^Same for fluids??
+
+======
+Energy
+======
+
+??? Energy cells, MFSU/MFEs, boiler/generator status?
+{
+	name="Boiler #1",
+	online=true, -- Outputting energy
+	fuelLvl=50.8, -- Fuel level as percentage
+	output=1440, -- Output in raw units
+	type="RF",
+	heat=1000
+}
+
+{
+	name="DireNuke20",
+	online=true,
+	fuelLvl=50.8,
+	output=320,
+	type="EU"
+	heat=0
+}
+
+=======
+Display
+=======
+
+Controller - Provides touch monitor control of remote redstone.
+
++-------------------------------+
+|       -= Farm Control =-      |
+|1. Sugarfarm #1 Harvester [ON] |
+|2. Sugarfarm #2 Harvester [ON] |
+|3. Cow slaughterhouse     [ON] |
+|4. Wheat Farm             [ON] |
+|5. Canning machinery      [ON] |
+| [PREV]                 [NEXT] |
++-------------------------------+
+
+Tank display - Displays information on selected fluids
+
++-------------------------------+
+|     -= Fluid Reserves =-      |
+| BioFuel        ||||||||}} 80% |
+| Fuel           |||}}}}}}} 35% |
+| Glowstone      |||||||||} 98% |
+| [PREV]                 [NEXT] |
++-------------------------------+
+
+Storage Net - Display amount of selected materials available on network.
+
++-------------------------------+
+|      -= Item Reserves =-      |
+| Uranium 235             5,678 |
+| Diamonds                1,511 |
+| Coal                   22,698 |
+| [PREV]                 [NEXT] |
++-------------------------------+

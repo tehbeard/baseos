@@ -1,0 +1,52 @@
+os.loadAPI("api/txtMenu")
+os.loadAPI("api/ezcfg")
+local cfg = {
+  dbLoc = "Chest location",
+  slotDir = "Book recepticle direction",
+  iris = "Iris"
+}
+-- load config
+cfg = ezcfg.load("stargate.cfg",cfg)
+
+db = peripheral.wrap(cfg.dbLoc)
+db.condenseItems()
+db.pullItem(cfg.slotDir,1,1)
+sleep(1)
+redstone.setOutput(cfg.iris, true)
+
+-- Dial a connection
+function dial(num)
+iris(false)
+db.pushItem(cfg.slotDir,num,1)
+sleep(5)
+db.pullItem(cfg.slotDir,1,1)
+sleep(1)
+iris(true)
+end
+
+function iris(state)
+  if cfg.iris ~= nil then
+    redstone.setOutput(cfg.iris, state)
+    sleep(1)
+  end
+end
+
+function dFunc(d)
+ return function (e)
+    e.status = "ACTIVE"
+    txtMenu.repaint()
+    dial(d)
+    e.status = "OPEN"
+  end
+end
+
+for i =1,db.getInventorySize(),1 do
+    is = db.getStackInSlot(i)
+    if(is ~= nil) then
+      print(tostring(i) .. " " .. is["name"])
+      txtMenu.addMenuItem(is["name"],"OPEN",dFunc(i))
+    end
+end
+
+txtMenu.mainLoop()
+

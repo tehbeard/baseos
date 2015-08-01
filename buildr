@@ -1,0 +1,169 @@
+os.loadAPI("api/ft")
+os.loadAPI("api/txtMenu")
+local programs = {}
+
+local enderChest = 16
+
+local function refreshStack()
+	left = turtle.getItemCount(1)
+	spc = turtle.getItemSpace(1)
+	if left < 9 then
+		turtle.select(16)
+		while turtle.digUp() do sleep(0) end
+		turtle.placeUp()
+		local _p = peripheral.wrap("top")
+        i = 1
+        while _p.pushItem("down",i,spc) < 16 do
+          i = i + 1
+        end
+		turtle.digUp()
+		turtle.select(1)
+	end
+end
+
+local function place()
+	refreshStack()
+	turtle.digDown()
+	turtle.select(1)
+	turtle.placeDown()
+end
+
+local function even(num)
+	return num % 2 == 0
+end
+
+local function odd(num)
+	return not even(num)
+end
+
+programs.line = {function(length)
+    place()
+    for i=2,length,1 do
+    	ft.forward()
+    	place()
+    end
+end,
+"Length"}
+
+programs.floor = {function(length,width)
+    for w = 1,width,1 do
+    	programs.line[1](length)
+    	if w ~= width then
+        	if odd(w) then
+    	    	turtle.turnRight()
+        		ft.forward()
+        		turtle.turnRight()
+        	else
+        		turtle.turnLeft()
+     		    ft.forward()
+    		    turtle.turnLeft()
+    	    end
+        end
+    end
+end,
+"Length","Width"}
+
+programs.wall = {function(length,height)
+    for h = 1,height,1 do
+    	programs.line[1](length)
+    	if h ~= height then
+    	    ft.up()
+    	    turtle.turnRight()
+    	    turtle.turnRight()
+        end
+    end
+end,
+"Length","Height"}
+
+programs.fence = {function(length,width) 
+    ft.up()
+
+    programs.line[1](length-1)
+    ft.forward()
+    turtle.turnRight()
+    programs.line[1](width-1)
+    ft.forward()
+    turtle.turnRight()
+    programs.line[1](length-1)
+    ft.forward()
+    turtle.turnRight()
+    programs.line[1](width-1)
+    ft.forward()
+    turtle.turnRight()
+
+end,
+"Length","Width"}
+
+programs.box = {function(length,width,height)
+    programs.floor[1](length,width)
+    if odd(width) then
+    	-- turn around 180
+    	turtle.turnRight()
+    	turtle.turnRight()
+    else
+    	turtle.turnRight()
+    	l = length
+    	length = width
+    	width = l
+    end
+
+    -- Do walls
+    for y=1,height,1 do 
+    		programs.fence[1](length,width)
+    end
+
+    ft.up()
+    programs.floor[1](length,width)
+end,
+"Length","Width","Height"}
+
+programs.pyramid = {function(length,width)
+    l = length
+    w = width
+
+    while l > 1 and w > 1 do
+    programs.fence[1](l,w)
+    ft.forward()
+    turtle.turnRight()
+    ft.forward()
+    turtle.turnLeft()
+    l = l - 2
+    w = w - 2
+    end
+    ft.up()
+    programs.floor[1](l,w)
+    end,
+"Length","Width"}
+
+function execRoutine(prog)
+	term.clear()
+	args = {}
+	for i=2,#prog,1 do
+		print(prog[i])
+		table.insert(args,tonumber(read()))
+	end
+	prog[1](unpack(args))
+end
+
+txtMenu.setTitle("Buildr V1.0")
+
+selected = nil
+for k,v in pairs(programs) do
+    txtMenu.addMenuItem(k,"Build",function() selected = v txtMenu.stopMainLoop() end)
+end
+
+txtMenu.addMenuItem("Exit",nil,function() txtMenu.stopMainLoop() end)
+
+
+local run = true
+while run do
+    txtMenu.mainLoop()
+    if selected ~= nil then
+    	term.clear()
+    	term.setCursorPos(1,1)
+    	execRoutine(selected)
+    	selected = nil
+    else
+    	run = false
+    end
+end
