@@ -1,14 +1,18 @@
 os.loadAPI("api/ft")
 os.loadAPI("api/txtMenu")
+local args = {...}
 local programs = {}
 
-local enderChest = 16
+local placers = {}
 
-local function refreshStack()
+placers.enderchest = {}
+placers.enderchest.desc = "Use enderchest to restock"
+placers.enderchest.chestLoc = 16
+placers.enderchest.place = function()
 	left = turtle.getItemCount(1)
 	spc = turtle.getItemSpace(1)
 	if left < 9 then
-		turtle.select(16)
+		turtle.select(placers.enderchest.chestLoc)
 		while turtle.digUp() do sleep(0) end
 		turtle.placeUp()
 		local _p = peripheral.wrap("top")
@@ -19,14 +23,62 @@ local function refreshStack()
 		turtle.digUp()
 		turtle.select(1)
 	end
-end
-
-local function place()
-	refreshStack()
 	turtle.digDown()
 	turtle.select(1)
 	turtle.placeDown()
 end
+
+placers.barrel = {}
+placers.barrel.desc = "use JABBA barrel + dolly to restock"
+placers.barrel.chestLoc = 16
+placers.barrel.place = function()
+	left = turtle.getItemCount(1)
+	spc = turtle.getItemSpace(1)
+	if left < 9 then
+		turtle.select(placers.barrel.chestLoc)
+		while turtle.digUp() do sleep(0) end
+		turtle.placeUp()
+        turtle.suckUp(spc)
+		turtle.placeUp()
+		turtle.select(1)
+	end
+	turtle.digDown()
+	turtle.select(1)
+	turtle.placeDown()
+end
+
+placers.inv = {}
+placers.inv.desc = "Use local inventory and restack"
+placers.inv.place = function()
+	left = turtle.getItemCount(1)
+	if left < 9 then
+		for i = 2,16,1 do 
+			turtle.select(i)
+			turtle.transferTo(1,64)
+		end
+	end
+	turtle.select(1)
+	turtle.digDown()
+	turtle.placeDown()
+end
+
+placers.ext = {}
+placers.ext.desc = "Call external program"
+placers.ext.place = function()
+    shell.run(args[2])
+end
+
+if placers[args[1]] == nil then
+	print("NO VALID BUILDTOOL SELECTED")
+    print("VALID BUILDTOOLS")
+    for k,v in pairs(placers) do
+        print(k .. " : " .. placers[k].desc)
+    end
+    print("FORMAT: buildr BUILDTOOL <optional buildtool args>")
+	return
+end
+
+local place = placers[args[1]].place --Set our place based on 
 
 local function even(num)
 	return num % 2 == 0
