@@ -4,8 +4,15 @@
 	-- it provides a reusable vertical menu API w/ paging and updatable status
 	txtmenu={
 	api=true,
-	name="[API] Text Menu",
+	name="[API] Text Menu (Deprecated)",
 	files={"api/txtMenu"}
+	},
+
+	-- TxtMenu API with support for multiple instances
+	txtmenumulti={
+	api=true,
+	name="[API] Text Menu",
+	files={"api/txtMenuMulti"}
 	},
 
 	-- Reactor
