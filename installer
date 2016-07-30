@@ -77,7 +77,7 @@ for id,entry in pairs(index) do
     end
 end
 
-txtMenu.addMenuItem("Exit","",txtMeu.stopMainLoop)
+txtMenu.addMenuItem("Exit","",txtMenu.stopMainLoop)
 term.clear()
 txtMenu.mainLoop()
 term.clear()
