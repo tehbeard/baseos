@@ -1,5 +1,5 @@
 print("Loading BaseOS installer")
-local baseRepo = "http://tehbeard.com/baseOS/"
+local baseRepo = "https://www.tehbeard.com/baseos/"
 
 function get(url)
     local resp = http.get(url)
