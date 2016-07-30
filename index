@@ -98,6 +98,13 @@
 	files={"api/qtynet"}
 	},	
 
+	-- Inventory management suite
+	invlist={
+	api=true,
+	name="[API] InvList",
+	files={"api/invlist"}
+	},
+
 
 
 	beam={
@@ -132,5 +139,13 @@
 	probe={
 	name="Probe",
 	files={"utils/probe"}
-	}
+	},
+
+	--Craftr
+	probe={
+	name="TurtleCraft v1.0 Alpha",
+	files={"encode.lua","craftr.lua","crafting.luadb"}
+	},
+
+
 }
