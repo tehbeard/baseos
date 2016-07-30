@@ -142,9 +142,10 @@
 	},
 
 	--Craftr
-	probe={
+	craftr={
 	name="TurtleCraft v1.0 Alpha",
-	files={"encode.lua","craftr.lua","crafting.luadb"}
+	files={"encode.lua","craftr.lua","crafting.luadb"},
+	deps={"invlist"}
 	},
 
 
