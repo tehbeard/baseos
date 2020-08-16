@@ -66,24 +66,24 @@ end
 
 function TxtMenu:keyListen()
 	_,param = os.pullEvent("key")
-	if param == 200 then
-		self:prevSel()
-	elseif param == 208 then
-		self:nextSel()
+	key = keys.getName(param)
+	if key == "up" then
+		prevSel()
+	elseif key == "down" then
+		nextSel()
 	end
 
-	if param == 203 then
-		self:prevPage()
-	elseif param == 205 then
-		self:nextPage()
+	if key == "left" then
+		prevPage()
+	elseif key == "right" then
+		nextPage()
 	end
 
-	if param == 57 or param == 28 then
-		e = self.entries[self:getSelectedIdx()]
+	if key == "enter" then
+		e = entries[getSelectedIdx()]
 		e.onclick(e)
 		sleep(0.5)
 	end
-
 end
 
 function TxtMenu:scrollListen()
