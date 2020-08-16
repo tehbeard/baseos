@@ -55,19 +55,20 @@ end
 
 function keyListen()
 	_,param = os.pullEvent("key")
-	if param == 200 then
+	key = keys.getName(param)
+	if key == "up" then
 		prevSel()
-	elseif param == 208 then
+	elseif key == "down" then
 		nextSel()
 	end
 
-	if param == 203 then
+	if key == "left" then
 		prevPage()
-	elseif param == 205 then
+	elseif key == "right" then
 		nextPage()
 	end
 
-	if param == 57 or param == 28 then
+	if key == "enter" then
 		e = entries[getSelectedIdx()]
 		e.onclick(e)
 		sleep(0.5)
