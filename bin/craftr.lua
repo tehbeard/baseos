@@ -4,7 +4,7 @@ local txtMenu = require("api/txtMenu");
 term.clear()
 term.setCursorPos(1,1)
 print("Loading fabrication templates")
-local fh = fs.open("crafting.luadb","r")
+local fh = fs.open("/etc/crafting.luadb","r")
 local db = textutils.unserialize(fh.readAll())
 local c = 0
 for k,v in pairs(db) do

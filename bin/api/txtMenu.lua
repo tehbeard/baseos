@@ -25,6 +25,10 @@ function txtMenu.setEntries(e)
 	entries = e
 end
 
+function txtMenu.clearEntries()
+	entries = {}
+end
+
 function txtMenu.setPage(p)
 	page = p
 end

@@ -15,13 +15,6 @@
 	files={"api/txtMenuMulti"}
 	},
 
-	-- Reactor
-	-- Big Reactor control program
-	reactor={
-	name="Big Reactor control",
-	files={"Reactor"}
-	},
-
 	-- Extension cord
 	-- Small API that allows you to easily control multiples of the same peripheral at once
 	-- an exercise in metatable stupidity
@@ -46,27 +39,6 @@
 	api=true,
 	name="[API] EZcfg",
 	files={"api/ezcfg"}
-	},
-
-
-	-- Beard's Better Stargate program
-	-- Much better program to control a "Stargate" (Myst portal)
-	-- Unlike dw20, it doesn't need a turtle, modems and what not.
-	-- Unfortunately, you do need to anvil a book to name it.
-	-- But, it does provide iris control
-	stargate={
-	name="Stargate 2",
-	files={"stargate"},
-	deps={"txtmenu","ezcfg"}
-	},
-
-
-	-- Energy Control program 
-	-- based on droxs work
-	energycontrol={
-	name="EnergyControl",
-	files={"checkenergy","engine.cfg"},
-	deps={"locate","extcord"}
 	},
 
 
@@ -128,22 +100,9 @@
 	},
 
 
-
-	--Sneak program, will jack stuff from a chest
-	sneak={
-	name="Sneak",
-	files={"utils/sneak"}
-	},
-
-	--probes peripherals
-	probe={
-	name="Probe",
-	files={"utils/probe"}
-	},
-
 	--Craftr
 	craftr={
-	name="TurtleCraft v1.0 Alpha",
+	name="TurtleCraft v1.0 Beta",
 	files={"encode.lua","craftr.lua","crafting.luadb"},
 	deps={"invlist"}
 	}
