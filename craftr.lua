@@ -1,5 +1,6 @@
-os.loadAPI("api/invlist")
-os.loadAPI("api/txtMenu")
+local invlist = require("api/invlist");
+local txtMenu = require("api/txtMenu");
+
 term.clear()
 term.setCursorPos(1,1)
 print("Loading fabrication templates")
@@ -102,7 +103,7 @@ function doCraft(e)
 	txtMenu.mainLoop()
 end
 
-txtMenu.setTitle("CCCraft v1.0 alpha")
+txtMenu.setTitle("CCCraft v1.1 beta")
 --TODO: INTERFACE
 for key, item in pairs(db) do
 	txtMenu.addMenuItem(item.name,tostring(item.qty), doCraft,{ key = key})

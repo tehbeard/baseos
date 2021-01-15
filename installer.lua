@@ -61,7 +61,7 @@ function chkInstallStatus(entry)
 end
 
 print("Downloading new index")
-index = textutils.unserialize(repoGet("index"))
+index = textutils.unserialize(repoGet("repo/index"))
 repoInstall(index["txtmenu"])
 os.loadAPI("/api/txtMenu")
 txtMenu.setTitle("BaseOS Installer")

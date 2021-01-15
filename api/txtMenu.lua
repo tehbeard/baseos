@@ -4,7 +4,9 @@ local page = 1
 local perPage = 10
 local title = "";
 
-function addMenuItem(name,status,callback,d)
+local txtMenu = {}
+
+function txtMenu.addMenuItem(name,status,callback,d)
 	local _d = d
 	if _d == nil then _d = {} end
 	table.insert(entries,{
@@ -15,40 +17,40 @@ function addMenuItem(name,status,callback,d)
 		})
 end
 
-function setTitle(t)
+function txtMenu.setTitle(t)
 	title = t
 end
 
-function setEntries(e)
+function txtMenu.setEntries(e)
 	entries = e
 end
 
-function setPage(p)
+function txtMenu.setPage(p)
 	page = p
 end
 
-function prevPage()
+function txtMenu.prevPage()
 	selected = 1
 	page = math.max(1,page - 1)
 end
 
-function nextPage()
+function txtMenu.nextPage()
 	selected = 1
 	page = math.min(math.ceil(#entries / perPage),page + 1)
 end
 
-function prevSel()
+function txtMenu.prevSel()
 	selected = math.max(1,selected - 1)
 end
 
-function nextSel()
-	actualIdx = getSelectedIdx() + 1
+function txtMenu.nextSel()
+	actualIdx = txtMenu.getSelectedIdx() + 1
     if(actualIdx <= #entries) then
 	    selected = math.min(perPage,selected + 1)
 	end
 end
 
-function getSelectedIdx()
+function txtMenu.getSelectedIdx()
 	return (perPage * (page-1))+selected
 end
 
@@ -57,19 +59,19 @@ function keyListen()
 	_,param = os.pullEvent("key")
 	key = keys.getName(param)
 	if key == "up" then
-		prevSel()
+		txtMenu.prevSel()
 	elseif key == "down" then
-		nextSel()
+		txtMenu.nextSel()
 	end
 
 	if key == "left" then
-		prevPage()
+		txtMenu.prevPage()
 	elseif key == "right" then
-		nextPage()
+		txtMenu.nextPage()
 	end
 
 	if key == "enter" then
-		e = entries[getSelectedIdx()]
+		e = entries[txtMenu.getSelectedIdx()]
 		e.onclick(e)
 		sleep(0.5)
 	end
@@ -79,9 +81,9 @@ end
 function scrollListen()
 	_,d = os.pullEvent("mouse_scroll")
 	if d == -1 then
-		prevSel()
+		txtMenu.prevSel()
 	else
-		nextSel()
+		txtMenu.nextSel()
 	end
 end
 
@@ -93,7 +95,7 @@ function clickListen()
 		if y > 1 and y < h then
 			idx = y - 1
 			if selected == idx and rightSide then
-			    e = entries[getSelectedIdx()]
+			    e = entries[txtMenu.getSelectedIdx()]
 		        e.onclick(e)
 		        sleep(0.5)
 		    else
@@ -101,7 +103,7 @@ function clickListen()
 		    end
 		end
 		if y == h then
-			if rightSide then nextPage() else prevPage() end
+			if rightSide then txtMenu.nextPage() else txtMenu.prevPage() end
 		end
 	end
 end
@@ -164,7 +166,7 @@ end
 
 local running = false
 
-function mainLoop(update)
+function txtMenu.mainLoop(update)
 	running = true
 	while running do
 		repaint()
@@ -172,6 +174,9 @@ function mainLoop(update)
     end
 end
 
-function stopMainLoop()
+function txtMenu.stopMainLoop()
 	running = false
 end
+
+
+return txtMenu

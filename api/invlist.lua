@@ -1,5 +1,9 @@
 _DIR = "up"
-p = peripheral.wrap("bottom")
+
+local p = peripheral.wrap("bottom")
+
+
+local invlist = {}
 
 function split(inputstr, sep)
         if sep == nil then
@@ -43,7 +47,7 @@ function findSlot(item)
   return nil
 end
 
-function countItem(item)
+function invlist.countItem(item)
   id,dmg = unpack(split(item,","))
   t = p.getInventorySize()
   a = 1
@@ -60,7 +64,7 @@ function countItem(item)
   return qty
 end
 
-function list()
+function invlist.list()
   r = {}
   t = p.getInventorySize()
   a = 1
@@ -82,7 +86,7 @@ function list()
 end
 
 
-function fetchItem(item, to, qty)
+function invlist.fetchItem(item, to, qty)
   if qty == nil then
     qty = 1
   end
@@ -95,9 +99,11 @@ function fetchItem(item, to, qty)
   end
 end
 
-function clean()
+function invlist.clean()
   for i = 1,16 do
     turtle.select(i)
     turtle.dropDown()
   end
 end
+
+return invlist;

@@ -18,7 +18,7 @@ newRecipe = {
 for k, slot in pairs(slots) do
   item = turtle.getItemDetail(slot)
   if item ~= nil then
-    newRecipe.r[k] = item.name .. "," .. tostring(item.damage)
+    newRecipe.r[k] = item.name
   else
     newRecipe.r[k] = 0
   end
@@ -27,12 +27,11 @@ if turtle.getItemDetail() == nil then
   turtle.craft()
 end
 
-result = turtle.getItemDetail()
+result = turtle.getItemDetail(turtle.getSelectedSlot(), true)
 
 newRecipe.qty = result.count
-print("Enter result name:")
-newRecipe.name = read()
-db[result.name .. "," .. tostring(result.damage)] = newRecipe 
+newRecipe.name = result.displayName
+db[result.name] = newRecipe 
 
 local fh = fs.open("crafting.luadb","w")
 fh.write(textutils.serialize(db))
