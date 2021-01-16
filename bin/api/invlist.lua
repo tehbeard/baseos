@@ -94,8 +94,10 @@ end
 
 function invlist.clean()
   for i = 1,16 do
-    turtle.select(i)
-    turtle.dropDown()
+    if(turtle.getItemCount(i) > 0) then
+      turtle.select(i)
+      turtle.dropDown()
+    end
   end
 end
 
