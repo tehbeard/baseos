@@ -34,5 +34,5 @@ newRecipe.name = result.displayName
 db[result.name] = newRecipe 
 
 local fh = fs.open("/etc/crafting.luadb","w")
-fh.write(textutils.serialize(db))
+fh.write(textutils.serialize(db, { compact = true }))
 fh.close()

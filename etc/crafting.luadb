@@ -1,1 +1,6 @@
-{}
+{
+    ["minecraft:oak_planks"]={type="craft",qty=4,name="Oak Planks",r={"minecraft:oak_log",0,0,0,0,0,0,0,0,},},
+    ["quark:oak_chest"]={qty=1,type="craft",name="Oak Chest",r={"minecraft:oak_planks","minecraft:oak_planks","minecraft:oak_planks","minecraft:oak_planks",0,"minecraft:oak_planks","minecraft:oak_planks","minecraft:oak_planks","minecraft:oak_planks",},},
+    ["minecraft:furnace"]={qty=1,type="craft",name="Furnace",r={"minecraft:cobblestone","minecraft:cobblestone","minecraft:cobblestone","minecraft:cobblestone",0,"minecraft:cobblestone","minecraft:cobblestone","minecraft:cobblestone","minecraft:cobblestone",},},
+    ["minecraft:oak_button"]={type="craft",qty=1,name="Oak Button",r={"minecraft:oak_planks",0,0,0,0,0,0,0,0,},},
+}
