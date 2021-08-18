@@ -1,5 +1,5 @@
-local ft = require("api/ft")
-local txtMenu = require("api/txtMenu")
+local ft = require("/api/ft")
+local txtMenu = require("/api/txtMenu")
 
 local args = {...}
 local programs = {}

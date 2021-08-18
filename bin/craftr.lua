@@ -1,5 +1,5 @@
-local invlist = require("api/invlist");
-local txtMenu = require("api/txtMenu");
+local invlist = require("/api/invlist");
+local txtMenu = require("/api/txtMenu");
 
 term.clear()
 term.setCursorPos(1,1)

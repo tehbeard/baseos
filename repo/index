@@ -4,41 +4,34 @@
 	-- it provides a reusable vertical menu API w/ paging and updatable status
 	txtmenu={
 	api=true,
-	name="[API] Text Menu (Deprecated)",
+	name="[API] Text Menu",
 	files={"bin/api/txtMenu.lua"}
 	},
 
 	-- TxtMenu API with support for multiple instances
-	txtmenumulti={
-	api=true,
-	name="[API] Text Menu",
-	files={"api/txtMenuMulti.lua"}
-	},
+	-- txtmenumulti={
+	-- api=true,
+	-- name="[API] Multi Text Menu",
+	-- files={"api/txtMenuMulti.lua"}
+	-- },
 
 	-- Extension cord
 	-- Small API that allows you to easily control multiples of the same peripheral at once
 	-- an exercise in metatable stupidity
-	extcord={
-	api=true,
-	name="[API] Extension cord",
-	files={"api/extcord.lua"}
-	},
+	-- extcord={
+	-- api=true,
+	-- name="[API] Extension cord",
+	-- files={"api/extcord.lua"}
+	-- },
 
-
-	-- wget
-	-- provides a simple wget command
-	wget={
-	name="wget",
-	files={"wget.lua"}
-	},
 
 	-- EZConfig
 	-- Small api to load configs from file, and do installer questions 
 	-- if no config is found
 	ezcfg={
-	api=true,
-	name="[API] EZcfg",
-	files={"api/ezcfg.lua"}
+		api=true,
+		name="[API] EZcfg",
+		files={"api/ezcfg.lua"}
 	},
 
 

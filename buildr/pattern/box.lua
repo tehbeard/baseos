@@ -1,4 +1,4 @@
-local ft = require("api/ft")
+local ft = require("/api/ft")
 local ptn_fence = require("./fence").fn
 local ptn_floor = require("./floor").fn
 

@@ -1,4 +1,4 @@
-local ft = require("api/ft")
+local ft = require("/api/ft")
 
 local pattern = {}
 pattern.fn = function(length)

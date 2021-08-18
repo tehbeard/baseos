@@ -1,4 +1,4 @@
-local ft = require("api/ft")
+local ft = require("/api/ft")
 local ptn_line = require("./line").fn
 
 local pattern = {}
