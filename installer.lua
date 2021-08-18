@@ -2,6 +2,7 @@ print("Loading BaseOS installer")
 local baseRepo = "https://www.tehbeard.com/baseos/"
 
 function get(url)
+	print("URL " .. url)
     local resp = http.get(url)
     local s = resp.readAll()
     resp.close()
@@ -63,7 +64,7 @@ end
 print("Downloading new index")
 index = textutils.unserialize(repoGet("repo/index"))
 repoInstall(index["txtmenu"])
-os.loadAPI("/api/txtMenu")
+txtMenu = require("bin/api/txtMenu");
 txtMenu.setTitle("BaseOS Installer")
 for id,entry in pairs(index) do
 	if not entry.api then
